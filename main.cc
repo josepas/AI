@@ -101,9 +101,9 @@ int main(int argc, const char **argv) {
 
         try {
             if( algorithm == 0 ) {
-                //value = color * (color == 1 ? maxmin(pv[i], 0, use_tt) : minmax(pv[i], 0, use_tt));
+                value = color * (color == 1 ? maxmin(pv[i], 0, use_tt) : minmax(pv[i], 0, use_tt));
             } else if( algorithm == 1 ) {
-                //value = negamax(pv[i], 0, color, use_tt);
+                value = negamax(pv[i], 0, color, use_tt);
             } else if( algorithm == 2 ) {
                 //value = negamax(pv[i], 0, -200, 200, color, use_tt);
             } else if( algorithm == 3 ) {
@@ -137,12 +137,45 @@ int minmax(state_t state, int depth, bool use_tt) {
 
     int score = INT_MAX;
 
-    vector<int> valid_moves;
-
-    state_t child;
-    for (int pos : valid_moves){
-        //child = state
-        score = min(score,maxmin(child,depth,use_tt));
+    for( int pos = 0; pos < DIM; ++pos ) {
+        if ( state.is_white_move(pos) ) {
+            score = min( score, maxmin(state.white_move(pos), --depth) );
+        }
     }
     return score;
 }
+
+
+int maxmin(state_t state, int depth, bool use_tt) {
+
+    if (depth == 0 or state.terminal()) return state.value();
+
+    int score = INT_MIN;
+
+    for( int pos = 0; pos < DIM; ++pos ) {
+        if ( state.is_black_move(pos) ) {
+            score = max( score, minmax(state.black_move(pos), --depth) );
+        }
+    }
+    return score;
+}
+
+int negamax(state_t state, int depth, int color, bool use_tt) {
+
+    if (depth == 0 or state.terminal()) return state.value();
+
+    int alpha = INT_MIN;    
+
+    for( int pos = 0; pos < DIM; ++pos ) {
+        if ( (color && state.is_black_move(pos)) || (!color && state.is_white_move(pos)) ) {
+            color = color == 1 ? 0 : 1;
+            alpha = max( alpha, -negamax(state.move(color, pos), color, --depth) );
+        }
+    }
+    return alpha;
+}
+
+
+
+
+
