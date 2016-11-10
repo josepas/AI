@@ -2,7 +2,7 @@
 // Universidad Simon Bolivar, 2012.
 // Author: Blai Bonet
 // Last Revision: 1/11/16
-// Modified by: 
+// Modified by:
 
 #include <iostream>
 #include <limits>
@@ -129,4 +129,3 @@ int main(int argc, const char **argv) {
 
     return 0;
 }
-
