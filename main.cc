@@ -8,6 +8,7 @@
 #include <limits>
 #include "othello_cut.h" // won't work correctly until .h is fixed!
 #include "utils.h"
+#include <climits>
 
 #include <unordered_map>
 
@@ -128,4 +129,20 @@ int main(int argc, const char **argv) {
     }
 
     return 0;
+}
+
+int minmax(state_t state, int depth, bool use_tt) {
+
+    if (depth == 0 or state.terminal()) return state.value();
+
+    int score = INT_MAX;
+
+    vector<int> valid_moves;
+
+    state_t child;
+    for (int pos : valid_moves){
+        //child = state
+        score = min(score,maxmin(child,depth,use_tt));
+    }
+    return score;
 }
